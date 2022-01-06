@@ -45,8 +45,8 @@ class MLP:
         for i in range(n_months):
             # build an MLP model with input dimension 'n_steps'
             model = Sequential()
-            model.add(Dense(500, activation='relu', input_dim=self.n_steps))
-            model.add(Dense(500, activation='relu'))
+            model.add(Dense(100, activation='relu', input_dim=self.n_steps))
+            model.add(Dense(100, activation='relu'))
             model.add(Dense(1))
             model.compile(optimizer='adam', loss='mse')
             # fit MLP model with 10% validation data
