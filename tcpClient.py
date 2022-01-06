@@ -1,3 +1,10 @@
+# Student Number: 18051000
+# This file builds a client for the chatbot to interact with the user.
+# In the main function, the chatbot will ask for a sentence ending with the
+# form YYYY-MM. The client sends the sentence to the server, receives and
+# prints out a result predicted by the MLP predictor in the server.
+
+
 import socket
 
 

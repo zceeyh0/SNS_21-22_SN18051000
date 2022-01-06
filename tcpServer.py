@@ -1,3 +1,12 @@
+# Student Number: 18051000
+# This file builds a server for the chatbot and builds an MLP predictor
+# to perform time series forecasting.
+# 'server_main()' builds connections with the clients and process
+# each connection in a separate thread.
+# 'threaded()' receives messages from the client (user) and sends
+# the prediction result on the user's input date
+
+
 import mlpPredictor
 # import socket programming library
 import socket

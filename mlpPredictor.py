@@ -1,6 +1,16 @@
+# Student Number: 18051000
+# This file builds an MLP model for time series forecasting.
+# To build the MLP predictor:
+# 1. Initialise a class 'MLP' with a dataframe and the size of training groups.
+# 2. Call the function 'create_training_set()' to get the training set.
+# 3. 'mlp_predict()' returns the results of forecasting.
+# 4. Use 'plot_predictions()' to plot the previous predictions.
+
+
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense
 from dateutil.relativedelta import relativedelta
@@ -35,8 +45,8 @@ class MLP:
         for i in range(n_months):
             # build an MLP model with input dimension 'n_steps'
             model = Sequential()
-            model.add(Dense(100, activation='relu', input_dim=self.n_steps))
-            model.add(Dense(100, activation='relu'))
+            model.add(Dense(500, activation='relu', input_dim=self.n_steps))
+            model.add(Dense(500, activation='relu'))
             model.add(Dense(1))
             model.compile(optimizer='adam', loss='mse')
             # fit MLP model with 10% validation data
@@ -54,13 +64,14 @@ class MLP:
                 new_month = self.future_months[-1] + relativedelta(months=1)
             else:
                 new_month = self.df['Month'].to_list()[-1] + relativedelta(months=1)
+            y_pred = round(y_test[0][0], 1)
             print('The predicted number of sunspots at', new_month,
-                  'will be:', y_test[0][0])
+                  'will be:', y_pred)
             self.future_months.append(new_month)
-            self.predictions.append(y_test[0][0])
+            self.predictions.append(y_pred)
         print('Time consumed for MLP training and predicting:',
               round(time.time() - start_t, 2), 's')
-        return round(self.predictions[-1], 2)
+        return self.predictions[-1]
 
     def plot_predictions(self):
         # plot the existing dataset and predictions for the future
@@ -70,3 +81,63 @@ class MLP:
         plt.ylabel('Number of Sunspots')
         plt.legend(loc='best')
         plt.show()
+
+    def results_eval(self, x_train, y_train, df_test, y_test):
+        pred = self.mlp_predict(x_train, y_train, months)
+        y_pred = np.array(mlp.predictions)
+        # Root Mean Square Error
+        print('RMSE:', np.sqrt(np.sum((y_pred - y_test) ** 2) / months))
+        # Mean Absolute Error
+        print('MAE:', np.sum(np.abs(y_pred - y_test)) / months)
+        # Mean Absolute Percentage Error
+        print('MAPE:', np.sum(np.abs(y_pred - y_test) / y_test) / months)
+        mean_y = np.mean(y_test)
+        ss_tot = sum((y_test - mean_y) ** 2)
+        ss_res = sum((y_test - y_pred) ** 2)
+        r2 = 1 - (ss_res / ss_tot)
+        print('R2 score:', r2)
+
+        # plot three graphs showing the prediction results, true results,
+        # and a combination of both
+        plt.plot(self.df['Month'], self.df['Sunspots'], label='Existing data')
+        plt.plot(self.future_months, self.predictions, label='Predicted data')
+        plt.xlabel('Date')
+        plt.ylabel('Number of Sunspots')
+        plt.legend(loc='best')
+        plt.show()
+
+        plt.plot(self.df['Month'], self.df['Sunspots'], label='Existing data')
+        plt.plot(df_test['Month'], df_test['Sunspots'], label='True data')
+        plt.xlabel('Date')
+        plt.ylabel('Number of Sunspots')
+        plt.legend(loc='best')
+        plt.show()
+
+        plt.plot(self.df['Month'], self.df['Sunspots'], label='Existing data')
+        plt.plot(self.future_months, self.predictions, label='Predicted data')
+        plt.plot(df_test['Month'], df_test['Sunspots'], label='True data')
+        plt.xlabel('Date')
+        plt.ylabel('Number of Sunspots')
+        plt.legend(loc='best')
+        plt.show()
+
+
+# the main function is used to evaluate accuracy and performance of the model
+if __name__ == '__main__':
+    # read the training dataset
+    data = pd.read_csv('D:\Study\MLNotebook\AMLS_21-22_SN18051000\Sunspots.csv')
+    # convert string (each month) into datetime (first day of each month)
+    data['Month'] = pd.to_datetime(data['Month'], infer_datetime_format=True)
+    # the first 2620 data points are the training set
+    df = data[:2620]
+    # number of months to predict
+    months = 200
+    # the rest of 200 data points are the test set
+    df_test = data[2620:2620+months]
+    # samples in each training group
+    n_steps = 200
+    mlp = MLP(df, n_steps)
+    sunspots = df['Sunspots'].to_list()
+    X_train, Y_train = mlp.create_training_set(sunspots)
+    Y_test = np.array(df_test['Sunspots'].to_list())
+    mlp.results_eval(X_train, Y_train, df_test, Y_test)
