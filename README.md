@@ -25,12 +25,12 @@ This python file builds a client to connect with the server. It asks for a sente
 
 ## The necessary Python packages/modules are: <br>
 `numpy 1.20.3`, `pandas 1.3.4`, `matplotlib 3.5.0`, `tensorflow 2.7.0` <br>
-When downloading these packages/modules, other essential packages/modules will be downloaded automatically as dependencies.
+When downloading the packages/modules above, other essential packages/modules will be downloaded automatically as dependencies.
 
 ## To run the code, please follow the steps below: <br>
 1. Download the whole repository (either by doing `git clone` or downloading zip). <br>
 2. Run the main function of the file `tcpServer.py` to start the server.
 3. Run the main function of the file `tcpClient.py` to connect with the server and start the chatbot. Make sure the client has the same port as the server's port.
 4. On the client's terminal, the chatbot will ask for a sentence ending with the form YYYY-MM.
-5. On the client's terminal, input a sentence ending with the date you want to predict. Wait until the chatbot gives you the predicted number of sunspots in that month.
+5. On the client's terminal, input a sentence ending with the date you want to predict. Wait until the chatbot gives you the predicted number of sunspots and a plot (it may take a few minutes if the input date is much later than 1983).
 6. The program will automatically show you a plot of predictions. If you want to evaluate the accuracy and performance of the model, please run the main function of `mlpPredictor.py` after setting the sizes of the training set and test set.
