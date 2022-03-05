@@ -23,7 +23,7 @@ def main():
     while True:
         # message sent to server
         sock.send(message.encode('ascii'))
-        print('Predicting...')
+        print('Predicting... (It takes longer for the first time)')
         # message received from server
         data = sock.recv(1024)
         # print the received message

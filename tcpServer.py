@@ -46,7 +46,7 @@ def threaded(conn):
 
         date_str = data[-7:]  # read the input month
         # Check if the input string is in the correct form and
-        # can be converted to int.
+        # can be converted to type 'int'.
         try:
             year_int = int(date_str[0:4])
             month_int = int(date_str[5:])
